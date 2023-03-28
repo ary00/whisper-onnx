@@ -71,7 +71,7 @@ class OnnxTextDecoder(nn.Module):
                 "kv_cache": kv_cache,
                 "offset": np.array(offset, dtype=int),
             }
-        ).values()
+        )#.values()
         return torch.from_numpy(output), kv_cache
 
 
