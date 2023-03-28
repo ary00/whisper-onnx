@@ -43,7 +43,7 @@ class OnnxAudioEncoder(nn.Module):
     def forward(self, x: Tensor):
         #result = self.model.infer_new_request(x.numpy())
         mel=x.numpy()
-        mel=np.expand_dims(mel, axis=0)
+        #mel=np.expand_dims(mel, axis=0)
 
         result= self.model.run(None, {'mel':mel})
         return torch.from_numpy(next(iter(result.values())))
