@@ -1,4 +1,4 @@
-# Whisper OpenVINO
+# Whisper Onnx
 
 This repo is a fork of whisper ASR models that uses onnx version of encoder and decoder medium model. Currently, the transcribe functionality of all models but `large` is supported.
 
