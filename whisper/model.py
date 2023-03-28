@@ -46,7 +46,7 @@ class OnnxAudioEncoder(nn.Module):
         #mel=np.expand_dims(mel, axis=0)
 
         result= self.model.run(None, {'mel':mel})
-        return torch.from_numpy(next(iter(result.values())))
+        return torch.from_numpy(np.array(result[0]))
 
 
 class OnnxTextDecoder(nn.Module):
