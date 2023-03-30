@@ -46,6 +46,7 @@ class OnnxAudioEncoder(nn.Module):
         #mel=np.expand_dims(mel, axis=0)
 
         result= self.model.run(None, {'mel':mel})
+        result=np.array(result)
         print("Result encoder: ", result)
         print("Result shape encoder: ", result.shape)
         return torch.from_numpy(np.array(result[0]))
@@ -74,7 +75,7 @@ class OnnxTextDecoder(nn.Module):
                 "offset": np.array(offset, dtype=int),
             }
         )#.values()
-
+        output=np.array(output)
         print("Output decoder: ", output)
         print("Output shape decoder: ", output.shape)
         return torch.from_numpy(output), kv_cache
