@@ -38,7 +38,7 @@ class OnnxAudioEncoder(nn.Module):
            # hf_hub_download(repo_id=f"zhuzilin/whisper-openvino-{model}", filename="encoder.bin"),
         #)
         #self.model = self.core.compile_model(self._model, "CPU")
-        self.model=onnxruntime.InferenceSession("encoder.onnx", providers= ['CUDAExecutionProvider']) 
+        self.model=onnxruntime.InferenceSession("encoder_small.onnx", providers= ['CUDAExecutionProvider']) 
 
     def forward(self, x: Tensor):
         #result = self.model.infer_new_request(x.numpy())
@@ -59,7 +59,7 @@ class OnnxTextDecoder(nn.Module):
           #  hf_hub_download(repo_id=f"zhuzilin/whisper-openvino-{model}", filename="decoder.bin"),
         #)
         #self.model = self.core.compile_model(self._model, "CPU")
-        self.model=onnxruntime.InferenceSession("decoder.onnx", providers= ['CUDAExecutionProvider']) 
+        self.model=onnxruntime.InferenceSession("decoder_small.onnx", providers= ['CUDAExecutionProvider']) 
 
     def forward(self, x: Tensor, xa: Union[Tensor, np.ndarray], kv_cache: Tensor, offset: int):
         if torch.is_tensor(xa):
@@ -80,7 +80,7 @@ class Whisper(nn.Module):
         super().__init__()
         self.type = model
         self.dims = dims
-        self.encoder = OnnxAudioEncoder(model=model) #medium model
+        self.encoder = OnnxAudioEncoder(model=model) 
         self.decoder = OnnxTextDecoder(model=model)
 
     def embed_audio(self, mel: torch.Tensor):
