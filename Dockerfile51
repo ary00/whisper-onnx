@@ -1,0 +1,20 @@
+FROM nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3
+RUN apt update
+RUN apt install -y nano net-tools
+WORKDIR /temp
+COPY models/whisper-medium-seq/local-pt-checkpoint/pytorch_model.bin /root/.cache/huggingface/hub/models--openai--whisper-medium/snapshots/b5ad0476e94d8a1899aaf05272092c31a0856d9d/
+RUN python3 -m pip install -U pip
+RUN wget https://nvidia.box.com/shared/static/v59xkrnvederwewo2f1jtv6yurl92xso.whl -O onnxruntime_gpu-1.12.1-cp38-cp38-linux_aarch64.whl
+RUN python3 -m pip install ./*.whl
+WORKDIR /temp
+COPY transformers transformers/
+WORKDIR /temp/transformers/
+RUN python3 -m pip install ".[onnx]"
+#RUN python3 -m pip install transformers[onnx]
+RUN python3 -m pip install datasets soundfile librosa debugpy
+WORKDIR /temp
+RUN python3 -m pip install optimum[onnxruntime-gpu]
+ADD preload.py .
+RUN python3 preload.py
+ENV LD_PRELOAD="/usr/local/lib/python3.8/dist-packages/scikit_learn.libs/libgomp-d22c30c5.so.1.0.0"
+CMD ["bash"]
